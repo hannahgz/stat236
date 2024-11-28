@@ -47,7 +47,7 @@ def fetch_cluster_data(case_ids, base_opinion_url, base_cluster_url, headers):
         # Fetch the cluster ID from the opinions API
         opinion_params = {
             "id": f"{case_id}",
-            "fields": "cluster_id",
+            "fields": "cluster_id,type",
         }
         cluster_url_response = make_api_request(base_opinion_url, headers, opinion_params)
 
@@ -73,6 +73,9 @@ def fetch_cluster_data(case_ids, base_opinion_url, base_cluster_url, headers):
         cluster_data["scdb_decision_direction"] = scdb_decision_direction_dict.get(
             cluster_data["scdb_decision_direction"], "unknown"
         )
+
+        if "type" in cluster_url_response["results"][0]:
+            cluster_data["type"] = cluster_url_response["results"][0]["type"]
 
         results[case_id] = cluster_data
 
